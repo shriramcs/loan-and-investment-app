@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loan and Investment Calculator</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
+        overflow: hidden;
+      }
+
+      .card-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .card-content {
+        padding: 20px;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .slider-container {
+        display: flex;
+        flex: 1;
+        align-items: center;
+      }
+
+      .slider {
+        flex: 1;
+      }
+
+      input[type='number'] {
+        width: 100px;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+      }
+
+      .amount-input {
+        display: flex;
+        align-items: center;
+      }
+
+      .amount-input span {
+        font-size: 1.1rem;
+        margin-right: 8px;
+      }
+
+      .amount-input input {
+        flex: 1;
+      }
+
+      .value-display {
+        font-size: 0.9rem;
+        text-align: right;
+        margin-top: 6px;
+        color: #666;
+      }
+
+      .info-display {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-top: 8px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      .summary-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+      }
+
+      .summary-list {
+        list-style: none;
+      }
+
+      .summary-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .summary-list li:last-child {
+        font-weight: 600;
+        border-bottom: none;
+        padding-top: 12px;
+      }
+
+      .net-savings {
+        background-color: #e6f7e6;
+        border: 1px solid #c3e6cb;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      .net-savings h3 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+
+      .net-savings p {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #28a745;
+      }
+
+      .bg-gray {
+        background-color: #f8f9fa;
+      }
+
+      @media (max-width: 768px) {
+        .summary-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Loan Calculator</h2>
+        </div>
+        <div class="card-content">
+          <div class="input-group">
+            <label for="loanAmount">Loan Amount</label>
+            <div class="amount-input">
+              <span>$</span>
+              <input
+                type="number"
+                id="loanAmount"
+                value="200000"
+                min="1000"
+                step="1000"
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="processingFeeSlider"
+              >Processing Fee
+              <span id="processingFeeDisplay">0.61</span>%</label
+            >
+            <div class="input-row">
+              <div class="slider-container">
+                <input
+                  type="range"
+                  id="processingFeeSlider"
+                  class="slider"
+                  min="0"
+                  max="5"
+                  step="0.01"
+                  value="0.61"
+                />
+              </div>
+              <input
+                type="number"
+                id="processingFeeInput"
+                value="0.61"
+                min="0"
+                max="5"
+                step="0.01"
+              />
+            </div>
+            <div class="value-display" id="processingFeeAmountDisplay">
+              Fee Amount: $1,220.00
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="loanInterestSlider"
+              >Loan Interest Rate
+              <span id="loanInterestDisplay">6.5</span>%</label
+            >
+            <div class="input-row">
+              <div class="slider-container">
+                <input
+                  type="range"
+                  id="loanInterestSlider"
+                  class="slider"
+                  min="1"
+                  max="20"
+                  step="0.1"
+                  value="6.5"
+                />
+              </div>
+              <input
+                type="number"
+                id="loanInterestInput"
+                value="6.5"
+                min="1"
+                max="20"
+                step="0.1"
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="loanTermSlider"
+              >Loan Term <span id="loanTermDisplay">3</span> years</label
+            >
+            <div class="input-row">
+              <div class="slider-container">
+                <input
+                  type="range"
+                  id="loanTermSlider"
+                  class="slider"
+                  min="1"
+                  max="30"
+                  step="1"
+                  value="3"
+                />
+              </div>
+              <input
+                type="number"
+                id="loanTermInput"
+                value="3"
+                min="1"
+                max="30"
+                step="1"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Investment Calculator</h2>
+        </div>
+        <div class="card-content">
+          <div class="input-group">
+            <label>Investment Amount (Loan - Processing Fee)</label>
+            <div class="info-display" id="investmentAmountDisplay">
+              $198,780.00
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="savingsInterestSlider"
+              >Savings Interest Rate
+              <span id="savingsInterestDisplay">8.3</span>%</label
+            >
+            <div class="input-row">
+              <div class="slider-container">
+                <input
+                  type="range"
+                  id="savingsInterestSlider"
+                  class="slider"
+                  min="1"
+                  max="15"
+                  step="0.1"
+                  value="8.3"
+                />
+              </div>
+              <input
+                type="number"
+                id="savingsInterestInput"
+                value="8.3"
+                min="1"
+                max="15"
+                step="0.1"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-gray">
+        <div class="card-header">
+          <h2 class="card-title">Summary</h2>
+        </div>
+        <div class="card-content">
+          <div class="summary-grid">
+            <div class="summary-section">
+              <h3>Loan Details</h3>
+              <ul class="summary-list">
+                <li>
+                  <span>Principal:</span>
+                  <span id="summaryPrincipal">$200,000.00</span>
+                </li>
+                <li>
+                  <span>Processing Fee:</span>
+                  <span id="summaryProcessingFee">$1,220.00 (0.61%)</span>
+                </li>
+                <li>
+                  <span>Interest Rate:</span>
+                  <span id="summaryLoanInterest">6.5%</span>
+                </li>
+                <li>
+                  <span>Loan Term:</span>
+                  <span id="summaryLoanTerm">3 years</span>
+                </li>
+                <li>
+                  <span>Total Loan Cost:</span>
+                  <span id="summaryTotalLoanCost">$219,573.36</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="summary-section">
+              <h3>Investment Details</h3>
+              <ul class="summary-list">
+                <li>
+                  <span>Initial Investment:</span>
+                  <span id="summaryInvestment">$198,780.00</span>
+                </li>
+                <li>
+                  <span>Interest Rate:</span>
+                  <span id="summarySavingsInterest">8.3%</span>
+                </li>
+                <li>
+                  <span>Term:</span>
+                  <span id="summaryInvestmentTerm">3 years</span>
+                </li>
+                <li>
+                  <span>Total Savings Value:</span>
+                  <span id="summaryTotalSavings">$251,191.38</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="net-savings">
+            <h3>Net Savings</h3>
+            <p id="netSavingsDisplay">$31,618.02</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Get all the input elements
+      const loanAmountInput = document.getElementById('loanAmount');
+      const processingFeeSlider = document.getElementById(
+        'processingFeeSlider'
+      );
+      const processingFeeInput = document.getElementById('processingFeeInput');
+      const loanInterestSlider = document.getElementById('loanInterestSlider');
+      const loanInterestInput = document.getElementById('loanInterestInput');
+      const loanTermSlider = document.getElementById('loanTermSlider');
+      const loanTermInput = document.getElementById('loanTermInput');
+      const savingsInterestSlider = document.getElementById(
+        'savingsInterestSlider'
+      );
+      const savingsInterestInput = document.getElementById(
+        'savingsInterestInput'
+      );
+
+      // Get all display elements
+      const processingFeeDisplay = document.getElementById(
+        'processingFeeDisplay'
+      );
+      const processingFeeAmountDisplay = document.getElementById(
+        'processingFeeAmountDisplay'
+      );
+      const loanInterestDisplay = document.getElementById(
+        'loanInterestDisplay'
+      );
+      const loanTermDisplay = document.getElementById('loanTermDisplay');
+      const investmentAmountDisplay = document.getElementById(
+        'investmentAmountDisplay'
+      );
+      const savingsInterestDisplay = document.getElementById(
+        'savingsInterestDisplay'
+      );
+
+      // Get all summary elements
+      const summaryPrincipal = document.getElementById('summaryPrincipal');
+      const summaryProcessingFee = document.getElementById(
+        'summaryProcessingFee'
+      );
+      const summaryLoanInterest = document.getElementById(
+        'summaryLoanInterest'
+      );
+      const summaryLoanTerm = document.getElementById('summaryLoanTerm');
+      const summaryTotalLoanCost = document.getElementById(
+        'summaryTotalLoanCost'
+      );
+      const summaryInvestment = document.getElementById('summaryInvestment');
+      const summarySavingsInterest = document.getElementById(
+        'summarySavingsInterest'
+      );
+      const summaryInvestmentTerm = document.getElementById(
+        'summaryInvestmentTerm'
+      );
+      const summaryTotalSavings = document.getElementById(
+        'summaryTotalSavings'
+      );
+      const netSavingsDisplay = document.getElementById('netSavingsDisplay');
+
+      // Function to format currency
+      function formatCurrency(value) {
+        return '$' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+      }
+
+      // Function to sync slider and input values
+      function syncValues(slider, input, displayElement) {
+        const value = parseFloat(slider.value);
+        input.value = value;
+        if (displayElement) {
+          displayElement.textContent = value;
+        }
+      }
+
+      // Function to calculate all values
+      function calculateValues() {
+        // Get current values
+        const loanAmount = parseFloat(loanAmountInput.value);
+        const processingFeePercentage = parseFloat(processingFeeSlider.value);
+        const loanInterestRate = parseFloat(loanInterestSlider.value);
+        const savingsInterestRate = parseFloat(savingsInterestSlider.value);
+        const loanTermYears = parseInt(loanTermSlider.value);
+
+        // Calculate processing fee
+        const processingFee = loanAmount * (processingFeePercentage / 100);
+
+        // Calculate investment amount
+        const investmentAmount = loanAmount - processingFee;
+
+        // Calculate total loan cost
+        const monthlyInterestRate = loanInterestRate / 100 / 12;
+        const numberOfPayments = loanTermYears * 12;
+        const monthlyPayment =
+          (loanAmount *
+            (monthlyInterestRate *
+              Math.pow(1 + monthlyInterestRate, numberOfPayments))) /
+          (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+        const totalLoanCost = monthlyPayment * numberOfPayments;
+
+        // Calculate total savings
+        const savingsYearlyRate = savingsInterestRate / 100;
+        const savingsValue =
+          investmentAmount * Math.pow(1 + savingsYearlyRate, loanTermYears);
+
+        // Calculate net savings
+        const netSavings = savingsValue - totalLoanCost;
+
+        // Update displays
+        processingFeeAmountDisplay.textContent = `Fee Amount: ${formatCurrency(
+          processingFee
+        )}`;
+        investmentAmountDisplay.textContent = formatCurrency(investmentAmount);
+
+        // Update summary
+        summaryPrincipal.textContent = formatCurrency(loanAmount);
+        summaryProcessingFee.textContent = `${formatCurrency(
+          processingFee
+        )} (${processingFeePercentage}%)`;
+        summaryLoanInterest.textContent = `${loanInterestRate}%`;
+        summaryLoanTerm.textContent = `${loanTermYears} years`;
+        summaryTotalLoanCost.textContent = formatCurrency(totalLoanCost);
+        summaryInvestment.textContent = formatCurrency(investmentAmount);
+        summarySavingsInterest.textContent = `${savingsInterestRate}%`;
+        summaryInvestmentTerm.textContent = `${loanTermYears} years`;
+        summaryTotalSavings.textContent = formatCurrency(savingsValue);
+        netSavingsDisplay.textContent = formatCurrency(netSavings);
+      }
+
+      // Set up event listeners for sliders
+      processingFeeSlider.addEventListener('input', function () {
+        syncValues(
+          processingFeeSlider,
+          processingFeeInput,
+          processingFeeDisplay
+        );
+        calculateValues();
+      });
+
+      loanInterestSlider.addEventListener('input', function () {
+        syncValues(loanInterestSlider, loanInterestInput, loanInterestDisplay);
+        calculateValues();
+      });
+
+      loanTermSlider.addEventListener('input', function () {
+        syncValues(loanTermSlider, loanTermInput, loanTermDisplay);
+        calculateValues();
+      });
+
+      savingsInterestSlider.addEventListener('input', function () {
+        syncValues(
+          savingsInterestSlider,
+          savingsInterestInput,
+          savingsInterestDisplay
+        );
+        calculateValues();
+      });
+
+      // Set up event listeners for number inputs
+      processingFeeInput.addEventListener('change', function () {
+        const value = parseFloat(processingFeeInput.value);
+        processingFeeSlider.value = value;
+        processingFeeDisplay.textContent = value;
+        calculateValues();
+      });
+
+      loanInterestInput.addEventListener('change', function () {
+        const value = parseFloat(loanInterestInput.value);
+        loanInterestSlider.value = value;
+        loanInterestDisplay.textContent = value;
+        calculateValues();
+      });
+
+      loanTermInput.addEventListener('change', function () {
+        const value = parseInt(loanTermInput.value);
+        loanTermSlider.value = value;
+        loanTermDisplay.textContent = value;
+        calculateValues();
+      });
+
+      savingsInterestInput.addEventListener('change', function () {
+        const value = parseFloat(savingsInterestInput.value);
+        savingsInterestSlider.value = value;
+        savingsInterestDisplay.textContent = value;
+        calculateValues();
+      });
+
+      loanAmountInput.addEventListener('change', calculateValues);
+
+      // Initialize calculations
+      calculateValues();
+    </script>
+  </body>
+</html>
